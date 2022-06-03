@@ -9,5 +9,7 @@ urlpatterns = [
     path("FetchFilteredModels/", views.CarsStoreApiMethods.getFilteredModels, ),
     path("FetchFilteredCarsByBrandId/", views.CarsStoreApiMethods.getFilteredCarByBrandID, ),
     path("FetchFilteredCarsByModelId/", views.CarsStoreApiMethods.getFilteredCarByModelID, ),
+    path("register/", views.CarsStoreApiMethods.register, ),
+    path("getAllUsers/", views.CarsStoreApiMethods.getAllUsers, ),
+    path("login/", views.CarsStoreApiMethods.login, ),
 ]
-
