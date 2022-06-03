@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .json import studentJson, userJson
-from .models import Cars
+from .json import CarJson, userJson, ModelJson, brandJson
+from .models import Car, CarModel, Brand
 from . import models
 from rest_framework import status
 from django.contrib.auth.models import User
@@ -45,37 +45,79 @@ def showAll():
 class CarsStoreApiMethods:
 
     @api_view(['GET'])
-    def getStudentById(self, STUDid):
+    def getCarById(self):
         try:
-            studentObject = Cars.objects.get(id=STUDid)
-        except Cars.DoesNotExist:
+            carObject = Car.objects.get(id=self.data['id'])
+        except Car.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = studentJson(studentObject)
+        serializer = CarJson(carObject)
         return Response(serializer.data)
 
     @api_view(['GET'])
     def getAllCars(self):
-        objects = Cars.objects.all()
-        jsonOfObjects = studentJson(objects, many=True)
+        objects = Car.objects.all()
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['POST'])
+    def getFilteredCarByBrandID(self):
+        print(self.data)
+        objects = Car.objects.filter(BrandID=self.data['BrandID'])
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['POST'])
+    def getFilteredCarByModelID(self):
+        if self.data['modelYear'] is not None:
+            objects = Car.objects.filter(ModelID=self.data['ModelID'], modelYear=self.data['modelYear'])
+        else:
+            objects = Car.objects.filter(ModelID=self.data['ModelID'])
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['POST'])
+    def getFilteredModels(self):
+        print(self.data)
+        objects = CarModel.objects.filter(BrandID=self.data['BrandID'])
+        jsonOfObjects = ModelJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['POST'])
+    def getFilteredCars(self):
+        print(self.data)
+        objects = Car.objects.filter(BrandID=self.data['BrandID'], ModelID=self.data['ModelID'])
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['GET'])
+    def getAllBrands(self):
+        objects = Brand.objects.all()
+        jsonOfObjects = brandJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['GET'])
+    def getAllModels(self):
+        objects = CarModel.objects.all()
+        jsonOfObjects = ModelJson(objects, many=True)
         return Response(jsonOfObjects.data)
 
     @api_view(['GET'])
     def orderStudents(self):
 
-        objects = Cars.objects.order_by('age')
-        jsonOfObjects = studentJson(objects, many=True)
+        objects = Car.objects.order_by('age')
+        jsonOfObjects = CarJson(objects, many=True)
         return Response(jsonOfObjects.data)
 
     @api_view(['GET'])
     def getStudentsGreaterThanSpecificAge(self, age):
 
-        objects = Cars.objects.filter(age__gt=age)
-        jsonOfObjects = studentJson(objects, many=True)
+        objects = Car.objects.filter(age__gt=age)
+        jsonOfObjects = CarJson(objects, many=True)
         return Response(jsonOfObjects.data)
 
     @api_view(['POST'])
     def post(self):
-        serializer = studentJson(data=self.data)
+        serializer = CarJson(data=self.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

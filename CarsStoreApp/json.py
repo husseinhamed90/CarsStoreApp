@@ -1,12 +1,24 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from .models import Cars
+from .models import Car, Brand, CarModel
 
 
-class studentJson(serializers.ModelSerializer):
+class CarJson(serializers.ModelSerializer):
     class Meta:
-        model = Cars
+        model = Car
+        fields = '__all__'
+
+
+class brandJson(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = '__all__'
+
+
+class ModelJson(serializers.ModelSerializer):
+    class Meta:
+        model = CarModel
         fields = '__all__'
 
 

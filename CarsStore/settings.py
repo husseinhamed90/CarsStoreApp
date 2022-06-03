@@ -78,6 +78,9 @@ WSGI_APPLICATION = 'CarsStore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'sql_mode': 'traditional',
+        },
         'NAME': 'carsstoredb',
         'USER': 'root',
         'PASSWORD': '',

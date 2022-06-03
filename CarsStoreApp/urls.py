@@ -2,5 +2,12 @@ from django.urls import path
 from CarsStoreApp import views
 
 urlpatterns = [
-    path("FetchAllStudents/", views.CarsStoreApiMethods.getAllCars, ),
+    path("FetchAllCars/", views.CarsStoreApiMethods.getAllCars, ),
+    path("FetchAllModels/", views.CarsStoreApiMethods.getAllModels, ),
+    path("FetchAllBrands/", views.CarsStoreApiMethods.getAllBrands, ),
+    path("FetchFilteredCars/", views.CarsStoreApiMethods.getFilteredCars, ),
+    path("FetchFilteredModels/", views.CarsStoreApiMethods.getFilteredModels, ),
+    path("FetchFilteredCarsByBrandId/", views.CarsStoreApiMethods.getFilteredCarByBrandID, ),
+    path("FetchFilteredCarsByModelId/", views.CarsStoreApiMethods.getFilteredCarByModelID, ),
 ]
+
