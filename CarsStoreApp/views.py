@@ -18,44 +18,42 @@ class CarsStoreApiMethods:
         serializer = CarJson(carObject)
         return Response(serializer.data)
 
-    @api_view(['POST'])
-    def getAllCars(self):
-        if self.data['modelYear'] is not None:
-            objects = Car.objects.filter(modelYear=self.data['modelYear'])
-        else:
-            objects = Car.objects.all()
-        jsonOfObjects = CarJson(objects, many=True)
-        return Response(jsonOfObjects.data)
-
-    @api_view(['POST'])
-    def getFilteredCarByBrandID(self):
-        print(self.data)
-        objects = Car.objects.filter(BrandID=self.data['BrandID'])
-        jsonOfObjects = CarJson(objects, many=True)
-        return Response(jsonOfObjects.data)
-
-    @api_view(['POST'])
-    def getFilteredCarByModelID(self):
-        if self.data['modelYear'] is not None:
-            objects = Car.objects.filter(ModelID=self.data['ModelID'], modelYear=self.data['modelYear'])
-        else:
-            objects = Car.objects.filter(ModelID=self.data['ModelID'])
-        jsonOfObjects = CarJson(objects, many=True)
-        return Response(jsonOfObjects.data)
-
-    @api_view(['POST'])
-    def getFilteredModels(self):
-        print(self.data)
-        objects = CarModel.objects.filter(BrandID=self.data['BrandID'])
-        jsonOfObjects = ModelJson(objects, many=True)
-        return Response(jsonOfObjects.data)
-
-    @api_view(['POST'])
+    @api_view(['GET'])
     def getFilteredCars(self):
         if self.data['modelYear'] is not None:
             objects = Car.objects.filter(BrandID=self.data['BrandID'], ModelID=self.data['ModelID'],modelYear=self.data['modelYear'])
         else:
             objects = Car.objects.filter(BrandID=self.data['BrandID'], ModelID=self.data['ModelID'],)
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['GET'])
+    def getFilteredCarByBrandID(self):
+        objects = Car.objects.filter(BrandID=self.data['BrandID'])
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['GET'])
+    def getFilteredCarByModelID(self):
+        if self.data['modelYear'] is not None:
+            objects = Car.objects.filter(ModelID=self.data['ModelID'],modelYear=self.data['modelYear'])
+        else:
+            objects = Car.objects.filter(ModelID=self.data['ModelID'])
+        jsonOfObjects = CarJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['GET'])
+    def getFilteredModels(self):
+        objects = CarModel.objects.filter(BrandID=self.data['BrandID'])
+        jsonOfObjects = ModelJson(objects, many=True)
+        return Response(jsonOfObjects.data)
+
+    @api_view(['GET'])
+    def getAllCars(self):
+        if self.data['modelYear'] is not None:
+            objects = Car.objects.filter(modelYear=self.data['modelYear'])
+        else:
+            objects = Car.objects.all()
         jsonOfObjects = CarJson(objects, many=True)
         return Response(jsonOfObjects.data)
 
@@ -81,8 +79,7 @@ class CarsStoreApiMethods:
     def register(self):
 
         try:
-            newUser = User.objects.create_user(username=self.data['username'], email=self.data['email'],
-                                               password=self.data['password'], )
+            newUser = User.objects.create_user(username=self.data['username'], email=self.data['email'],password=self.data['password'], )
             newUser.first_name = self.data['first_name']
             newUser.last_name = self.data['last_name']
             self.data["id"] = newUser.id
@@ -90,7 +87,7 @@ class CarsStoreApiMethods:
 
         except User.DoesNotExist:
 
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"result": "invalid user"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(self.data)
 
